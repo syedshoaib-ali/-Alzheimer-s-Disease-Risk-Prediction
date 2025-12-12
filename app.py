@@ -37,7 +37,7 @@ st.markdown("""
     color: #1f1b1b;
     border-left: 4px solid #9b59b6;
 }          
-.section-heading { font-size: 28px; font-family: 'Roboto', sans-serif; font-weight: 600; color: #1a1a1a; margin-bottom: 15px; }
+.section-heading { font-size: 28px; font-family: 'Roboto', sans-serif; font-weight: 600; color: #1a1a1a; text-align: center; margin-bottom: 15px; }
 .card-title { font-size: 20px; font-family: 'Roboto', sans-serif; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; }
 
 /* Apply custom-label style to all Streamlit input labels */
@@ -424,5 +424,6 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
