@@ -48,8 +48,8 @@ div[data-testid="stSliderLabel"],
 div[data-testid="stSelectboxLabel"],
 label {
     color: #1a1a1a !important;
-    font-weight: 600 !important;
-    font-size: 16px !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
 }
 
 /* Overview Cards */
@@ -424,4 +424,5 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
