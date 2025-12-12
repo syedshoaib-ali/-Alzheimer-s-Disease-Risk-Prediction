@@ -40,6 +40,18 @@ st.markdown("""
 .section-heading { font-size: 28px; font-family: 'Roboto', sans-serif; font-weight: 600; color: #1a1a1a; margin-bottom: 15px; }
 .card-title { font-size: 20px; font-family: 'Roboto', sans-serif; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; }
 
+/* Apply custom-label style to all Streamlit input labels */
+div.stSlider > label,
+div.stSelectbox > label,
+div.stNumberInput > label,
+div[data-testid="stSliderLabel"],
+div[data-testid="stSelectboxLabel"],
+label {
+    color: #1a1a1a !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+}
+
 /* Overview Cards */
 .overview-card {
     padding: 20px; border-radius: 15px; color: white; font-family: 'Roboto', sans-serif;
@@ -412,3 +424,4 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
