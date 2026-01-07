@@ -201,8 +201,8 @@ with colA:
 # ---- Column B ----
 with colB:
     st.markdown('<div class="input-card"><div class="card-title">❇ Cognitive & Functional</div></div>', unsafe_allow_html=True)
-    input_data["MMSE [Mini-Mental state Examination Score]"] = st.slider("MMSE Score",0,30,20)
-    input_data["ADL [Activities of Daily Living Score]"] = st.slider("ADL Score",0,60,30)
+    input_data["MMSE"] = st.slider("MMSE [Mini-Mental state Examination Score]",0,30,20)
+    input_data["ADL"] = st.slider("ADL [Activities of Daily Living Score]",0,60,30)
     input_data["FunctionalAssessment"] = st.slider("Functional Assessment",0,60,20)
 
     st.markdown('<div class="input-card"><div class="card-title">❇ Behavioral & Symptoms</div></div>', unsafe_allow_html=True)
@@ -424,6 +424,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
