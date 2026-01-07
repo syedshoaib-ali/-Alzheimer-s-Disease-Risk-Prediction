@@ -177,7 +177,7 @@ with colA:
     ethnicity_map = {"Caucasian":0,"African American":1,"Asian":2,"Other":3}
     eth_sel = st.selectbox("Ethnicity", list(ethnicity_map.keys()))
     input_data["Ethnicity"] = ethnicity_map[eth_sel]
-    input_data["BMI [Body Mass Index]"] = st.slider("BMI", 10.0,40.0,22.5)
+    input_data["BMI"] = st.slider("BMI [Body Mass Index]", 10.0,40.0,22.5)
 
     # Smoking Yes/No
     st.markdown('<label class="custom-label">Smoking</label>', unsafe_allow_html=True)
@@ -424,6 +424,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
