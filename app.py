@@ -113,9 +113,9 @@ with open("selected_features.json", "r") as f:
     selected_features = json.load(f)
 
 # ------------------------------------
-# SHAP EXPLAINER (NO CACHING)
+# SHAP EXPLAINER (AUTO, SAFE)
 # ------------------------------------
-explainer = shap.TreeExplainer(model)
+explainer = shap.Explainer(model)
 
 # ------------------------------------
 # OVERVIEW CARDS
@@ -315,7 +315,7 @@ if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
 
     pred, proba, scaled_input = run_prediction(input_data)
 
-    shap_values = explainer.shap_values(scaled_input)
+    shap_values = explainer(scaled_input)
 
 if isinstance(shap_values, list):
     shap_vals = shap_values[0]
@@ -362,32 +362,24 @@ else:
     # --------------------------------
     st.header("🧠 Explainable AI: Why This Prediction?")
 
-    shap_df = pd.DataFrame({
-        "Feature": selected_features,
-        "SHAP Impact": shap_vals[0]
-    }).sort_values(by="SHAP Impact", key=abs, ascending=False)
+   shap_df = pd.DataFrame(
+    shap_values.values,
+    columns=selected_features
+)
 
-    st.subheader("🔎 Top Influencing Features")
-    st.dataframe(shap_df.head(10), use_container_width=True)
+st.subheader("🔍 Feature Contribution (XAI)")
+st.dataframe(shap_df)
+
 
     # --------------------------------
     # SHAP VISUALIZATION
     # --------------------------------
-    st.subheader("📈 SHAP Feature Contribution Visualization")
+    st.subheader("🧠 SHAP Explanation")
 
-    fig, ax = plt.subplots()
-    shap.waterfall_plot(
-        shap.Explanation(
-            values=shap_vals[0],
-            base_values=explainer.expected_value,
-            data=scaled_input[0],
-            feature_names=selected_features
-        ),
-        max_display=10,
-        show=False
-    )
+fig, ax = plt.subplots()
+shap.plots.waterfall(shap_values[0], show=False)
+st.pyplot(fig)
 
-    st.pyplot(fig)
     
     # =============================
     #     CLINICAL INTERPRETATION
@@ -467,6 +459,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
