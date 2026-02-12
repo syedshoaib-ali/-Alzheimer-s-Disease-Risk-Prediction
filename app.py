@@ -113,13 +113,9 @@ with open("selected_features.json", "r") as f:
     selected_features = json.load(f)
 
 # ------------------------------------
-# LOAD SHAP EXPLAINER (XAI)
+# SHAP EXPLAINER (NO CACHING)
 # ------------------------------------
-@st.cache_resource
-def load_shap_explainer(model):
-    return shap.TreeExplainer(model)
-
-explainer = load_shap_explainer(model)
+explainer = shap.TreeExplainer(model)
 
 # ------------------------------------
 # OVERVIEW CARDS
@@ -319,6 +315,13 @@ if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
 
     pred, proba, scaled_input = run_prediction(input_data)
 
+    shap_values = explainer.shap_values(scaled_input)
+
+if isinstance(shap_values, list):
+    shap_vals = shap_values[0]
+else:
+    shap_vals = shap_values
+
     # =============================
     #       PREDICTION RESULT
     # =============================
@@ -464,6 +467,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
