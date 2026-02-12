@@ -15,6 +15,36 @@ st.set_page_config(
     layout="wide"
 )
 
+# =====================================
+# LOAD MODEL ARTIFACTS (CACHED)
+# =====================================
+@st.cache_resource
+def load_artifacts():
+    model = joblib.load("best_model.pkl")
+    scaler = joblib.load("scaler.pkl")
+    with open("selected_features.json") as f:
+        selected_features = json.load(f)
+    return model, scaler, selected_features
+
+model, scaler, selected_features = load_artifacts()
+
+# =====================================
+# LOAD SHAP EXPLAINER (SAFE FOR CLOUD)
+# =====================================
+@st.cache_resource
+def load_shap_explainer(model, scaler, feature_names):
+    # background data (small & synthetic)
+    background = np.zeros((50, len(feature_names)))
+    background = scaler.transform(background)
+
+    explainer = shap.Explainer(
+        model.predict_proba,
+        background
+    )
+    return explainer
+
+explainer = load_shap_explainer(model, scaler, selected_features)
+
 # ------------------------------------
 # CUSTOM CSS FOR APP
 # ------------------------------------
@@ -111,11 +141,6 @@ model = joblib.load("best_model.pkl")
 scaler = joblib.load("scaler.pkl")
 with open("selected_features.json", "r") as f:
     selected_features = json.load(f)
-
-# ------------------------------------
-# SHAP EXPLAINER (AUTO, SAFE)
-# ------------------------------------
-explainer = shap.Explainer(model)
 
 # ------------------------------------
 # OVERVIEW CARDS
@@ -308,14 +333,17 @@ div.stButton > button:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# =============================
-#       PREDICT BUTTON
-# =============================
-if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
+# =====================================
+# PREDICT BUTTON + XAI
+# =====================================
+if st.button("🔍 Predict Alzheimer’s Risk", use_container_width=True):
 
     pred, proba, scaled_input = run_prediction(input_data)
 
     shap_values = explainer(scaled_input)
+
+    # Alzheimer class = index 1
+    shap_class1 = shap_values[:, :, 1]
 
     # =============================
     #       PREDICTION RESULT
@@ -352,30 +380,27 @@ if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
             </p>
         </div>
         """, unsafe_allow_html=True)
-
-    # XAI – FEATURE EXPLANATION
-    # --------------------------------
-    st.header("🧠 Explainable AI: Why This Prediction?")
+    # =====================================
+    # XAI TABLE
+    # =====================================
+    st.header("🧠 Explainable AI – Feature Contributions")
 
     shap_df = pd.DataFrame(
-    shap_values.values,
-    columns=selected_features
+        shap_class1.values,
+        columns=selected_features
     )
 
-    st.subheader("🔍 Feature Contribution (XAI)")
     st.dataframe(shap_df)
 
-
-    # --------------------------------
-    # SHAP VISUALIZATION
-    # --------------------------------
-    st.subheader("🧠 SHAP Explanation")
+    # =====================================
+    # SHAP WATERFALL PLOT
+    # =====================================
+    st.subheader("🔍 SHAP Waterfall Explanation")
 
     fig, ax = plt.subplots()
-    shap.plots.waterfall(shap_values[0], show=False)
+    shap.plots.waterfall(shap_class1[0], show=False)
     st.pyplot(fig)
 
-    
     # =============================
     #     CLINICAL INTERPRETATION
     # =============================
@@ -454,6 +479,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
