@@ -317,11 +317,6 @@ if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
 
     shap_values = explainer(scaled_input)
 
-if isinstance(shap_values, list):
-    shap_vals = shap_values[0]
-else:
-    shap_vals = shap_values
-
     # =============================
     #       PREDICTION RESULT
     # =============================
@@ -362,13 +357,13 @@ else:
     # --------------------------------
     st.header("🧠 Explainable AI: Why This Prediction?")
 
-   shap_df = pd.DataFrame(
+    shap_df = pd.DataFrame(
     shap_values.values,
     columns=selected_features
-)
+    )
 
-st.subheader("🔍 Feature Contribution (XAI)")
-st.dataframe(shap_df)
+    st.subheader("🔍 Feature Contribution (XAI)")
+    st.dataframe(shap_df)
 
 
     # --------------------------------
@@ -376,9 +371,9 @@ st.dataframe(shap_df)
     # --------------------------------
     st.subheader("🧠 SHAP Explanation")
 
-fig, ax = plt.subplots()
-shap.plots.waterfall(shap_values[0], show=False)
-st.pyplot(fig)
+    fig, ax = plt.subplots()
+    shap.plots.waterfall(shap_values[0], show=False)
+    st.pyplot(fig)
 
     
     # =============================
@@ -459,6 +454,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
