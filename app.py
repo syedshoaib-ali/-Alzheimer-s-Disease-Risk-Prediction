@@ -93,6 +93,15 @@ ul { margin: 0; padding-left: 20px; }
 """, unsafe_allow_html=True)
 
 # ------------------------------------
+# LOAD SHAP EXPLAINER (XAI)
+# ------------------------------------
+@st.cache_resource
+def load_shap_explainer(model):
+    return shap.TreeExplainer(model)
+
+explainer = load_shap_explainer(model)
+
+# ------------------------------------
 # TITLE SECTION
 # ------------------------------------
 st.markdown("<div class='main-title'>🔬 Alzheimer’s Disease Risk Prediction</div>", unsafe_allow_html=True)
@@ -346,6 +355,37 @@ if st.button(" Predict Alzheimer’s Risk", use_container_width=True):
         </div>
         """, unsafe_allow_html=True)
 
+    # XAI – FEATURE EXPLANATION
+    # --------------------------------
+    st.header("🧠 Explainable AI: Why This Prediction?")
+
+    shap_df = pd.DataFrame({
+        "Feature": selected_features,
+        "SHAP Impact": shap_vals[0]
+    }).sort_values(by="SHAP Impact", key=abs, ascending=False)
+
+    st.subheader("🔎 Top Influencing Features")
+    st.dataframe(shap_df.head(10), use_container_width=True)
+
+    # --------------------------------
+    # SHAP VISUALIZATION
+    # --------------------------------
+    st.subheader("📈 SHAP Feature Contribution Visualization")
+
+    fig, ax = plt.subplots()
+    shap.waterfall_plot(
+        shap.Explanation(
+            values=shap_vals[0],
+            base_values=explainer.expected_value,
+            data=scaled_input[0],
+            feature_names=selected_features
+        ),
+        max_display=10,
+        show=False
+    )
+
+    st.pyplot(fig)
+    
     # =============================
     #     CLINICAL INTERPRETATION
     # =============================
@@ -424,6 +464,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
