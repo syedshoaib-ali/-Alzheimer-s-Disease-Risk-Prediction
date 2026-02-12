@@ -93,15 +93,6 @@ ul { margin: 0; padding-left: 20px; }
 """, unsafe_allow_html=True)
 
 # ------------------------------------
-# LOAD SHAP EXPLAINER (XAI)
-# ------------------------------------
-@st.cache_resource
-def load_shap_explainer(model):
-    return shap.TreeExplainer(model)
-
-explainer = load_shap_explainer(model)
-
-# ------------------------------------
 # TITLE SECTION
 # ------------------------------------
 st.markdown("<div class='main-title'>🔬 Alzheimer’s Disease Risk Prediction</div>", unsafe_allow_html=True)
@@ -120,6 +111,15 @@ model = joblib.load("best_model.pkl")
 scaler = joblib.load("scaler.pkl")
 with open("selected_features.json", "r") as f:
     selected_features = json.load(f)
+
+# ------------------------------------
+# LOAD SHAP EXPLAINER (XAI)
+# ------------------------------------
+@st.cache_resource
+def load_shap_explainer(model):
+    return shap.TreeExplainer(model)
+
+explainer = load_shap_explainer(model)
 
 # ------------------------------------
 # OVERVIEW CARDS
@@ -464,6 +464,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
