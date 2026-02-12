@@ -43,7 +43,7 @@ def load_shap_explainer(model, scaler, feature_names):
     )
     return explainer
 
-explainer = load_shap_explainer(model, scaler, selected_features)
+explainer = load_shap_explainer()
 
 # ------------------------------------
 # CUSTOM CSS FOR APP
@@ -479,6 +479,7 @@ st.markdown("""
     Always consult a qualified healthcare provider for any concerns regarding Alzheimer's disease or other cognitive conditions.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
